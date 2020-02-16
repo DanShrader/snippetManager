@@ -12,11 +12,6 @@ import (
 // a fish
 type Fish struct{ Name string }
 
-func homePage(w http.ResponseWriter, r *http.Request){
-    fmt.Fprintf(w, "Welcome to the HomePage!")
-    fmt.Println("Endpoint Hit: homePage")
-}
-
 func returnAllArticles(w http.ResponseWriter, r *http.Request){
     fmt.Println("Endpoint Hit: returnAllArticles")
     records, err := db.ReadAll("fish")
@@ -88,24 +83,50 @@ func deleteArticle(w http.ResponseWriter, r *http.Request) {
 }
 
 
+func homePage(w http.ResponseWriter, r *http.Request){
+    fmt.Println("Endpoint Hit: homePage")
+    // fmt.Fprintf(w, "Welcome to the HomePage!")
+    // http.FileServer(http.Dir("./"))
+    // http.StripPrefix("/", http.FileServer(http.Dir("./pages/index.html")))
+    // http.ServeFile(w, r, r.URL.Path[1:])
+    http.ServeFile(w, r,"./pages/index.html")
+    // Handler(http.StripPrefix(STATIC_DIR, http.FileServer(http.Dir("."+STATIC_DIR))))
+}
+
+
 func handleRequests() {
         
-    myRouter := mux.NewRouter().StrictSlash(true)
-    myRouter.HandleFunc("/", homePage)
-    myRouter.HandleFunc("/articles", returnAllArticles)
-    // NOTE: Ordering is important here! This has to be defined before
-    // the other `/article` endpoint.
-    myRouter.HandleFunc("/article", createNewArticle).Methods("POST")
-    myRouter.HandleFunc("/article/{id}", deleteArticle).Methods("DELETE")
-    myRouter.HandleFunc("/article/{id}", returnSingleArticle)
-    log.Fatal(http.ListenAndServe(":10000", myRouter))
+    router := mux.NewRouter().StrictSlash(true)
+    
+    // All Statis assets
+    router.
+      PathPrefix(STATIC_DIR).
+      Handler(http.StripPrefix(STATIC_DIR, http.FileServer(http.Dir("."+STATIC_DIR))))
+    
+    
+    
+    
+    
+    router.HandleFunc("/", homePage)
+    router.HandleFunc("/articles", returnAllArticles)
+    // NOTE: Ordering is important here!
+    router.HandleFunc("/article", createNewArticle).Methods("POST")
+    router.HandleFunc("/article/{id}", deleteArticle).Methods("DELETE")
+    router.HandleFunc("/article/{id}", returnSingleArticle)
+    log.Fatal(http.ListenAndServe(":" + PORT, router))
     
 }
 
-var db, err  = scribble.New("./", nil)
+const (
+    STATIC_DIR = "/static/"
+    PORT       = "10000"
+    DATA       = "./"
+)
+
+var db, err  = scribble.New(DATA, nil)
 
 func main() {
   
-    fmt.Println("Rest API v2.0 - Mux Routers")
+    fmt.Println("Rest API v1.0 - Dan's Mux Router test")
     handleRequests()
 }
