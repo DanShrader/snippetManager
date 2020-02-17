@@ -6,19 +6,19 @@
     <meta name="description" content="">
     <meta name="author" content="">
         
-    <link rel="apple-touch-icon" sizes="57x57" href="images/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="images/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="images/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="images/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="images/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="images/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="images/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="images/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="static/images/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="static/images/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="static/images/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="static/images/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="static/images/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="static/images/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="static/images/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="static/images/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="static/images/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="static/images/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="static/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="static/images/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="static/images/favicon-16x16.png">
     <meta name="msapplication-TileColor" content="#002B36">
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#002B36">
@@ -28,12 +28,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     
     <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">-->
-    <link href="default.css" rel="stylesheet">
-    <link href="bootstrap.light.min.css" rel="stylesheet alternate" id="themeLight">
-    <link href="bootstrap.dark.min.css"  rel="stylesheet" id="themeDark">
-    <link href="gisty.css" rel="stylesheet">
-    <link href="light.css" rel="stylesheet alternate">
-    <link href="dark.css" rel="stylesheet">
+    <link href="static/default.css" rel="stylesheet">
+    <link href="static/bootstrap.light.min.css" rel="stylesheet alternate" id="themeLight">
+    <link href="static/bootstrap.dark.min.css"  rel="stylesheet" id="themeDark">
+    <link href="static/gisty.css" rel="stylesheet">
+    <link href="static/light.css" rel="stylesheet alternate">
+    <link href="static/dark.css" rel="stylesheet">
     
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js'></script>
@@ -45,13 +45,233 @@
   </head>
 
 
+  <script type="text/template" id='language-template'>
+    <span style='font-height:24px !important;font-weight:bold;'><%= language %> <span class="badge badge-pill badge-secondary"><%= length %></span></span>
+  </script>
+
+
+  <script type="text/template" id='tag-template'>
+    <span style='font-height:24px !important;font-weight:bold;font-style:italic'><i class="fa fa-tag" aria-hidden="true"></i> <%= tag %> <span class="badge badge-pill badge-secondary"><%= length %></span></span>
+  </script>
+
+
+  <script type="text/template" id='search-template'>
+    <ul class="nav">
+      <li class="nav-item" style="margin-right:1em;">
+        <span class="btn btn-success new-gist"><i class="fa fa-plus" aria-hidden="true"></i> New gist</span>
+      </li>
+      <li class="nav-item">
+        <input class="form-control mr-sm-2 searchInput" type="text" placeholder="Search">
+        <span class="btn btn-success my-2 my-sm-0 searchBTN"><i class="fa fa-search" aria-hidden="true"></i> Search</span>
+      </li>
+    </ul>
+  </script>
+
+
+  <script type="text/template" id='file'>
+    <div class="card">
+      <div class="card-header">
+        <h5 style="float:left;margin-top: 0.5rem;"><%= filename %></h5>
+        <button class="btn btn-outline-primary copy" style="float:right"><i class="fa fa-clipboard" aria-hidden="true"></i> Copy</button>
+        <button class="btn btn-outline-primary send-gist" style="float:right;margin-right:5px"><i class="fa fa-envelope-o" aria-hidden="true"></i> Mail</button>
+      </div>
+      <div class="card-body">
+        <pre class="card-text"><code class="<%= language %>"><%= _.unescape(content.replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll("&","&amp;")) %></code></pre>
+      </div>
+    </div>
+    <br>
+  </script>
+  
+  
+  <script type="text/template" id='template-edit-file'>
+    <div class="card">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-8">
+            <input class="form-control mr-sm-2 float-left fileName" type="text" placeholder="Filename and extension" value="<%= filename %>">
+          </div>
+          <div class="col">
+            <button class="btn btn-danger deleteFile float-right"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body edit-mode ">
+        <textarea class="description"><%= content %></textarea>
+      </div>
+    </div>
+    <br>
+  </script>
+  
+  
+  <script type="text/template" id='item'>
+    <p class='truncate'><%= description %></p>
+    <%
+      if (tags.length > 0) {
+          _.each(tags.split(' '), function (tags) { %>
+              <span class='badge badge-pill badge-primary'><%= tags %></span><%
+          });
+      }
+    %>
+  </script>
+
+  <script type="text/template" id='details'>
+    <div class="row">
+      <div class="col-3">
+      <% if(public === false){  %>
+        Private gist <i class="fa fa-eye-slash" aria-hidden="true"></i>
+      <%   }else{  %>
+        Public gist <i class="fa fa-eye" aria-hidden="true"></i>
+      <%   } %>
+        
+      </div>
+      <div class="col-4">
+        Updated on: <%= cleanUpdateDate %>
+      </div>
+      <div class="col-5">
+        <div class="btn-group float-right" data-toggle="buttons">
+          <button class="btn btn-info edit-gist btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</button>
+          <button class="btn btn-danger deleteGists btn-sm"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+    
+      <%
+        if (tags.length > 0) {
+          %>
+          <i class="fa fa-tags" aria-hidden="true"></i>
+          <%
+          
+            _.each(tags.split(' '), function (tags) { %>
+                <span class='badge badge-pill badge-primary'><%= tags %></span><%
+            });
+        }
+      %>
+    
+      </div>
+    </div>
+    
+    <hr>
+    <div>
+      <p class='descriptionView'><%= description || "loading" %></p>
+    </div>
+    <br>
+    <br>
+    <div class='files' style="padding:0px;margin:0px"></div>
+  </script>
+
+
+  <script type="text/template" id='template-edit-details'>
+    <div class="row">
+      <div class="col-8">
+        <div class="btn-group float-left" data-toggle="buttons">
+          <button class="btn btn-success btn-sm save-gist"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+          <button class="btn btn-warning btn-sm cancel-gist"><i class="fa fa-times" aria-hidden="true"></i> Cancel</button>
+        </div>
+      </div>
+    </div>
+    
+    <div>
+      <textarea class="description"><%= description %></textarea>
+    </div>
+    <br>
+    <br>
+    <div class='files' style="padding:0px;margin:0px"></div>
+    <div style="padding:0px;margin:0px">
+    <div class="row">
+        <div class="col">
+          <button class="btn btn-success add-gist btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Add File</button>
+        </div>
+      </div>
+    </div>
+  </script>
+
+
+  <script type="text/template" id='template-initial-load'>
+    <div class="row">
+      <div class="col-12">
+        <img src="logos/Logo-text-w.svg" alt="screenshot" title="logo" style="max-width:250px;">
+        <br>
+        <br>
+        <h4>Note this is beta software</h4>
+        <p>Use at your own risk <i class="fa fa-smile-o" aria-hidden="true"></i></p>
+        <br>
+        <h4>Bug reporting</h4>
+        
+        <p>Found a bug? Please report it <a href="https://github.com/DanShrader/gisty/issues" target="_blank">here</a></p>
+        <p>Otherwise feel free to fix it, and do a pull request</p>
+        <hr>
+        <h4>Change log</h4>
+        <ul>
+          <li><i>2018-10-17</i> Made the light theme a little easier to see.</li>
+          <li><i>2018-03-22</i> Added the simple ability to email a gist from the application.  All client side with mailto command.</li>
+          <li><i>2018-03-21</i> Fixed the last of the theme loading issues</li>
+          <li><i>2018-03-15</i> Adjusted code to allow easier theme import not supports theme switching.  Stores value in local storage.</li>
+          <li><i>2018-03-14</i> Theme changes, now using "solar" theme from <a href="https://bootswatch.com/" target=_blank>https://bootswatch.com/</a></li>
+          <li><i>2017-10-18</i> URL Change to https://www.gistyapp.com and added SSL Cert</li>
+          <li><i>2017-09-22</i> Fixed double tags and added sortign on both the Languages and Tags</li>
+          <li><i>2017-09-21</i> Fixed the saving multiple files in one gist</li>
+          <li><i>Prior</i> Fixed the mis-counting tags</li>
+          <li><i>Prior</i> Formatting and other UI fixes</li>
+          <li><i>Prior</i> Inital load screen with updates and such</li>
+          <li><i>Prior</i> Fixed the 'search' button bug when pressing enter</li>
+          <li><i>Prior</i> Made the buttons a little smaller</li>
+          <li><i>Prior</i> Moved tags to the top on the details page </li>
+          <li><i>Prior</i> Making the initial onboarding simpler</li>
+          <li><i>Prior</i> Place holders for loading</li>
+        </ul>
+      </div>
+    </div>
+  </script>
+
+
+  <script type="text/template" id='template-loading'>
+    <div class="row text-center">
+      <div class="col">
+          <h1>
+            <i class="fa fa-cog fa-spin fa-1x fa-fw"></i>
+            Building your gist
+          </h1>
+          <h2>
+            Please wait.
+          </h2>
+      </div>
+    </div>
+  </script>
+
+
+  <script type="text/template" id='template-new-details'>
+    <div class="row">
+      <div class="col-8">
+        <button class="btn btn-success save-gist"><i class="fa fa-check" aria-hidden="true"></i> Save</button>
+        <button class="btn btn-warning cancel-gist-new"><i class="fa fa-times" aria-hidden="true"></i> Cancel</button>
+      </div>
+
+    </div>
+    
+    <div>
+      <textarea class="description"></textarea>
+    </div>
+    <br>
+    <br>
+    <div class='files' style="padding:0px;margin:0px"></div>
+    <div style="padding:0px;margin:0px">
+    <div class="row">
+        <div class="col">
+          <button class="btn btn-success add-gist"><i class="fa fa-plus" aria-hidden="true"></i> Add File</button>
+        </div>
+      </div>
+    </div>
+  </script>
+
   <body>
     <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
       <ul class="nav">
         <li class="nav-item">
             <a class="navbar-brand" href="#">
             <!--gisty~-->
-            <img src="logos/text.svg" alt="screenshot" title="logo" style="max-width:60px;">
+            <img src="static/logos/text.svg" alt="screenshot" title="logo" style="max-width:60px;">
           
             </a>
         </li>
@@ -87,13 +307,19 @@
       <div id="page-content-wrapper">
         <div class="container-fluid">
           <div id='content'>
-            <h2>go Test</h2>
-            <p>This is test</p>
+            <h2>Welecome to gisty~</h2>
+            <p>This is a GitHub gist interface, with lots of filters, search, and is not very chatty with the API.</p>
+            <h3>Setup</h3>
+            <p>To start using this app you'll need to generate a GitHub API key and enter it the first time at the prompt.  The reason for this is we don't want to run a node server for API authentication.  It saves the key to your local storage so you don't have to keep entering it.  The team never see's it, cannot access it, and it is local to your machine.</p>
+            <p>You can create a key <a href="https://github.com/settings/tokens" target="_blank">here</a> on your GitHub account.  Then select generate new token, then generate a new key for 'gists', copy the key and then use it to connect gisty to you repo.</p>
+            <button class='btn btn-success btn-lg' onclick="setup()">Enter API key</button>
+            <hr>
+            <img src="static/screenshot.png" alt="screenshot" title="Screenshot" style="max-width:80%;margin-left:10%; border:4px solid #1e434a">
           </div>
         </div>
       </div>
     </div>
-
+    <script src='static/gisty.js'></script>
   </body>
   
 </html>

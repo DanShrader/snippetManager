@@ -88,39 +88,42 @@ func homePage(w http.ResponseWriter, r *http.Request){
     // fmt.Fprintf(w, "Welcome to the HomePage!")
     // http.FileServer(http.Dir("./"))
     // http.StripPrefix("/", http.FileServer(http.Dir("./pages/index.html")))
-    // http.ServeFile(w, r, r.URL.Path[1:])
-    http.ServeFile(w, r,"./pages/index.html")
+    http.ServeFile(w, r, r.URL.Path[1:])
+    // http.ServeFile(w, r,"./pages/index.html")
     // Handler(http.StripPrefix(STATIC_DIR, http.FileServer(http.Dir("."+STATIC_DIR))))
 }
 
 
 func handleRequests() {
-        
     router := mux.NewRouter().StrictSlash(true)
     
-    // All Statis assets
+    // NOTE: Ordering is important here!
+    
+    SECTION_NAME:= "article"
+    router.HandleFunc(API_PREFIX + SECTION_NAME + "s"    , returnAllArticles)
+    router.HandleFunc(API_PREFIX + SECTION_NAME + "/"     , createNewArticle).Methods("POST")
+    router.HandleFunc(API_PREFIX + SECTION_NAME + "/{id}", deleteArticle).Methods("DELETE")
+    router.HandleFunc(API_PREFIX + SECTION_NAME + "/{id}", returnSingleArticle)
+    
+    // All static assets
     router.
       PathPrefix(STATIC_DIR).
       Handler(http.StripPrefix(STATIC_DIR, http.FileServer(http.Dir("."+STATIC_DIR))))
+
+    // All static pages
+    router.
+      PathPrefix("/").
+      Handler(http.StripPrefix("/", http.FileServer(http.Dir("."+PAGES_DIR))))
     
-    
-    
-    
-    
-    router.HandleFunc("/", homePage)
-    router.HandleFunc("/articles", returnAllArticles)
-    // NOTE: Ordering is important here!
-    router.HandleFunc("/article", createNewArticle).Methods("POST")
-    router.HandleFunc("/article/{id}", deleteArticle).Methods("DELETE")
-    router.HandleFunc("/article/{id}", returnSingleArticle)
     log.Fatal(http.ListenAndServe(":" + PORT, router))
-    
 }
 
 const (
+    PAGES_DIR  = "/pages/"
     STATIC_DIR = "/static/"
     PORT       = "10000"
     DATA       = "./"
+    API_PREFIX = "/api/v1/"
 )
 
 var db, err  = scribble.New(DATA, nil)
