@@ -9,6 +9,99 @@ import (
     "github.com/gorilla/mux"
 	  "github.com/sdomino/scribble"
 )
+
+
+// ============================================================================
+// ============================================================================
+
+// a fish
+type Snippet struct{
+  Name      string
+  Tags      string
+  Notes     string
+  Reference string
+  Related   string
+  Files     string
+}
+
+
+func returnAllSnippets(w http.ResponseWriter, r *http.Request){
+    fmt.Println("Endpoint Hit: returnAll" + DATABASE_SNIPPET)
+    records, err := db.ReadAll(DATABASE_SNIPPET)
+  	if err != nil {
+  		fmt.Println("Error", err)
+  	}
+	  items := []Snippet{}
+	  for _, f := range records {
+	  	fishFound := Snippet{}
+		  if err := json.Unmarshal([]byte(f), &fishFound); err != nil {
+			  fmt.Println("Error", err)
+		  }
+		  items = append(items, fishFound)
+	  }
+	  w.Header().Set("content-type", "application/json")
+    json.NewEncoder(w).Encode(items)
+}
+
+func returnSingleSnippet(w http.ResponseWriter, r *http.Request) {
+    fmt.Println("Endpoint Hit: return one" + DATABASE_SNIPPET)
+    vars := mux.Vars(r)
+    key := vars["id"]
+
+    // Loop over all of our Articles
+    // if the article.Id equals the key we pass in
+    // return the article encoded as JSON
+  	item := Snippet{}
+  	if err := db.Read(DATABASE_SNIPPET, key, &item); err != nil {
+  		fmt.Println("Error", err)
+  	}
+  	w.Header().Set("content-type", "application/json")
+  	json.NewEncoder(w).Encode(item)
+}
+
+func createNewSnippet(w http.ResponseWriter, r *http.Request) {
+    fmt.Println("Endpoint Hit: create new" + DATABASE_SNIPPET)
+  	b, err := ioutil.ReadAll(r.Body)
+  	defer r.Body.Close()
+
+  	var item Snippet
+  	err = json.Unmarshal(b, &item)
+  	if err != nil {
+  		http.Error(w, err.Error(), 500)
+  		return
+  	}
+
+    db.Write(DATABASE_SNIPPET, item.Name, item)
+  
+  	output, err := json.Marshal(item)
+  	if err != nil {
+  		http.Error(w, err.Error(), 500)
+  		return
+  	}
+  	w.Header().Set("content-type", "application/json")
+  	w.Write(output)
+}
+
+
+func deleteSnippet(w http.ResponseWriter, r *http.Request) {
+    fmt.Println("Endpoint Hit: delete one" + DATABASE_SNIPPET)
+    vars := mux.Vars(r)
+    id := vars["id"]
+    fmt.Println("Removing: " + string(DATABASE_SNIPPET) + "/" + string(id))
+  	if err := db.Delete(DATABASE_SNIPPET, string(id)); err != nil {
+  		fmt.Println("Error", err)
+  	}
+    fmt.Fprintf(w, "%+v", "Removed: " + string(DATABASE_SNIPPET) + "/" + string(id))
+}
+
+// ============================================================================
+// ============================================================================
+
+
+
+
+
+
 // a fish
 type Fish struct{ Name string }
 
@@ -83,16 +176,6 @@ func deleteArticle(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func homePage(w http.ResponseWriter, r *http.Request){
-    fmt.Println("Endpoint Hit: homePage")
-    // fmt.Fprintf(w, "Welcome to the HomePage!")
-    // http.FileServer(http.Dir("./"))
-    // http.StripPrefix("/", http.FileServer(http.Dir("./pages/index.html")))
-    http.ServeFile(w, r, r.URL.Path[1:])
-    // http.ServeFile(w, r,"./pages/index.html")
-    // Handler(http.StripPrefix(STATIC_DIR, http.FileServer(http.Dir("."+STATIC_DIR))))
-}
-
 
 func handleRequests() {
     router := mux.NewRouter().StrictSlash(true)
@@ -101,9 +184,16 @@ func handleRequests() {
     
     SECTION_NAME:= "article"
     router.HandleFunc(API_PREFIX + SECTION_NAME + "s"    , returnAllArticles)
-    router.HandleFunc(API_PREFIX + SECTION_NAME + "/"     , createNewArticle).Methods("POST")
+    router.HandleFunc(API_PREFIX + SECTION_NAME + "/"    , createNewArticle).Methods("POST")
     router.HandleFunc(API_PREFIX + SECTION_NAME + "/{id}", deleteArticle).Methods("DELETE")
     router.HandleFunc(API_PREFIX + SECTION_NAME + "/{id}", returnSingleArticle)
+
+    
+    SECTION_NAME= "snippet"
+    router.HandleFunc(API_PREFIX + SECTION_NAME + "s"    , returnAllSnippets)
+    router.HandleFunc(API_PREFIX + SECTION_NAME + "/"    , createNewSnippet).Methods("POST")
+    router.HandleFunc(API_PREFIX + SECTION_NAME + "/{id}", deleteSnippet).Methods("DELETE")
+    router.HandleFunc(API_PREFIX + SECTION_NAME + "/{id}", returnSingleSnippet)
     
     // All static assets
     router.
@@ -122,8 +212,9 @@ const (
     PAGES_DIR  = "/pages/"
     STATIC_DIR = "/static/"
     PORT       = "10000"
-    DATA       = "./"
+    DATA       = "./DATA"
     API_PREFIX = "/api/v1/"
+    DATABASE_SNIPPET= "snippet"
 )
 
 var db, err  = scribble.New(DATA, nil)
