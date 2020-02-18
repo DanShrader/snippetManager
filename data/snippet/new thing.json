@@ -1,7 +1,11 @@
 {
 	"Name": "new thing",
-	"Language": "",
-	"Notes": "",
+	"Description": "This is something else",
+	"Tags": "",
+	"Notes": "This is something else",
 	"Reference": "",
-	"Related": ""
+	"Related": "",
+	"Files": "",
+	"Language": "",
+	"Public": false
 }

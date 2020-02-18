@@ -16,12 +16,15 @@ import (
 
 // a fish
 type Snippet struct{
-  Name      string
-  Tags      string
-  Notes     string
-  Reference string
-  Related   string
-  Files     string
+  Name        string
+  Description string
+  Tags        string
+  Notes       string
+  Reference   string
+  Related     string
+  Files       string
+  Language    string
+  Public      bool
 }
 
 
@@ -81,6 +84,31 @@ func createNewSnippet(w http.ResponseWriter, r *http.Request) {
   	w.Header().Set("content-type", "application/json")
   	w.Write(output)
 }
+
+
+func updateSnippet(w http.ResponseWriter, r *http.Request) {
+    fmt.Println("Endpoint Hit: update" + DATABASE_SNIPPET)
+  	b, err := ioutil.ReadAll(r.Body)
+  	defer r.Body.Close()
+
+  	var item Snippet
+  	err = json.Unmarshal(b, &item)
+  	if err != nil {
+  		http.Error(w, err.Error(), 500)
+  		return
+  	}
+
+    db.Write(DATABASE_SNIPPET, item.Name, item)
+  
+  	output, err := json.Marshal(item)
+  	if err != nil {
+  		http.Error(w, err.Error(), 500)
+  		return
+  	}
+  	w.Header().Set("content-type", "application/json")
+  	w.Write(output)
+}
+
 
 
 func deleteSnippet(w http.ResponseWriter, r *http.Request) {
@@ -190,8 +218,9 @@ func handleRequests() {
 
     
     SECTION_NAME= "snippet"
-    router.HandleFunc(API_PREFIX + SECTION_NAME + "s"    , returnAllSnippets)
-    router.HandleFunc(API_PREFIX + SECTION_NAME + "/"    , createNewSnippet).Methods("POST")
+    router.HandleFunc(API_PREFIX + SECTION_NAME + "/"    , returnAllSnippets).Methods("GET")
+    router.HandleFunc(API_PREFIX + SECTION_NAME + ""    , createNewSnippet).Methods("POST")
+    router.HandleFunc(API_PREFIX + SECTION_NAME + "/{id}", updateSnippet).Methods("PUT")
     router.HandleFunc(API_PREFIX + SECTION_NAME + "/{id}", deleteSnippet).Methods("DELETE")
     router.HandleFunc(API_PREFIX + SECTION_NAME + "/{id}", returnSingleSnippet)
     

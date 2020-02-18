@@ -1,3 +1,11 @@
 {
-	"Name": "orange"
+	"Name": "orange",
+	"Description": "This is a list of items",
+	"Tags": "",
+	"Notes": "This is a list of items",
+	"Reference": "",
+	"Related": "",
+	"Files": "",
+	"Language": "",
+	"Public": false
 }

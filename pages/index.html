@@ -71,7 +71,7 @@
   <script type="text/template" id='file'>
     <div class="card">
       <div class="card-header">
-        <h5 style="float:left;margin-top: 0.5rem;"><%= filename %></h5>
+        <h5 style="float:left;margin-top: 0.5rem;"><%= Name %></h5>
         <button class="btn btn-outline-primary copy" style="float:right"><i class="fa fa-clipboard" aria-hidden="true"></i> Copy</button>
         <button class="btn btn-outline-primary send-gist" style="float:right;margin-right:5px"><i class="fa fa-envelope-o" aria-hidden="true"></i> Mail</button>
       </div>
@@ -88,7 +88,7 @@
       <div class="card-header">
         <div class="row">
           <div class="col-8">
-            <input class="form-control mr-sm-2 float-left fileName" type="text" placeholder="Filename and extension" value="<%= filename %>">
+            <input class="form-control mr-sm-2 float-left fileName" type="text" placeholder="Filename and extension" value="">
           </div>
           <div class="col">
             <button class="btn btn-danger deleteFile float-right"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
@@ -104,7 +104,7 @@
   
   
   <script type="text/template" id='item'>
-    <p class='truncate'><%= description %></p>
+    <p class='truncate'><%= Notes %></p>
     <%
       if (tags.length > 0) {
           _.each(tags.split(' '), function (tags) { %>
@@ -117,7 +117,7 @@
   <script type="text/template" id='details'>
     <div class="row">
       <div class="col-3">
-      <% if(public === false){  %>
+      <% if(Public === false){  %>
         Private gist <i class="fa fa-eye-slash" aria-hidden="true"></i>
       <%   }else{  %>
         Public gist <i class="fa fa-eye" aria-hidden="true"></i>
@@ -125,7 +125,7 @@
         
       </div>
       <div class="col-4">
-        Updated on: <%= cleanUpdateDate %>
+        Updated on:
       </div>
       <div class="col-5">
         <div class="btn-group float-right" data-toggle="buttons">
@@ -154,7 +154,7 @@
     
     <hr>
     <div>
-      <p class='descriptionView'><%= description || "loading" %></p>
+      <p class='descriptionView'><%= Notes || "loading" %></p>
     </div>
     <br>
     <br>
@@ -173,7 +173,7 @@
     </div>
     
     <div>
-      <textarea class="description"><%= description %></textarea>
+      <textarea class="description"><%= Notes %></textarea>
     </div>
     <br>
     <br>
@@ -191,7 +191,7 @@
   <script type="text/template" id='template-initial-load'>
     <div class="row">
       <div class="col-12">
-        <img src="logos/Logo-text-w.svg" alt="screenshot" title="logo" style="max-width:250px;">
+        <img src="static/logos/Logo-text-w.svg" alt="screenshot" title="logo" style="max-width:250px;">
         <br>
         <br>
         <h4>Note this is beta software</h4>

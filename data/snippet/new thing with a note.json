@@ -1,8 +1,11 @@
 {
 	"Name": "new thing with a note",
+	"Description": "",
 	"Tags": "",
-	"Notes": "This is a new thing that has an awesome note",
+	"Notes": "This is a new thing that has an awesome notesssssss",
 	"Reference": "",
 	"Related": "",
-	"Files": ""
+	"Files": "",
+	"Language": "",
+	"Public": false
 }
