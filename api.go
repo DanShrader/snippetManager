@@ -7,7 +7,8 @@ import (
     "net/http"
     "encoding/json"
     "github.com/gorilla/mux"
-	  "github.com/sdomino/scribble"
+    "github.com/sdomino/scribble"
+	  "github.com/google/uuid"
 )
 
 
@@ -16,6 +17,7 @@ import (
 
 // a fish
 type Snippet struct{
+  Id          string
   Name        string
   Description string
   Tags        string
@@ -29,7 +31,7 @@ type Snippet struct{
 
 
 func returnAllSnippets(w http.ResponseWriter, r *http.Request){
-    fmt.Println("Endpoint Hit: returnAll" + DATABASE_SNIPPET)
+    fmt.Println("Endpoint Hit: returnAll " + DATABASE_SNIPPET)
     records, err := db.ReadAll(DATABASE_SNIPPET)
   	if err != nil {
   		fmt.Println("Error", err)
@@ -47,7 +49,7 @@ func returnAllSnippets(w http.ResponseWriter, r *http.Request){
 }
 
 func returnSingleSnippet(w http.ResponseWriter, r *http.Request) {
-    fmt.Println("Endpoint Hit: return one" + DATABASE_SNIPPET)
+    fmt.Println("Endpoint Hit: return one " + DATABASE_SNIPPET)
     vars := mux.Vars(r)
     key := vars["id"]
 
@@ -63,7 +65,7 @@ func returnSingleSnippet(w http.ResponseWriter, r *http.Request) {
 }
 
 func createNewSnippet(w http.ResponseWriter, r *http.Request) {
-    fmt.Println("Endpoint Hit: create new" + DATABASE_SNIPPET)
+    fmt.Println("Endpoint Hit: create new " + DATABASE_SNIPPET)
   	b, err := ioutil.ReadAll(r.Body)
   	defer r.Body.Close()
 
@@ -73,8 +75,14 @@ func createNewSnippet(w http.ResponseWriter, r *http.Request) {
   		http.Error(w, err.Error(), 500)
   		return
   	}
-
-    db.Write(DATABASE_SNIPPET, item.Name, item)
+    id, err := uuid.NewUUID()
+    if err !=nil {
+        // handle error
+        fmt.Println("Error", err)
+    }
+    // fmt.Printf(id.String())
+    item.Id = id.String()
+    db.Write(DATABASE_SNIPPET, item.Id, item)
   
   	output, err := json.Marshal(item)
   	if err != nil {
@@ -87,7 +95,7 @@ func createNewSnippet(w http.ResponseWriter, r *http.Request) {
 
 
 func updateSnippet(w http.ResponseWriter, r *http.Request) {
-    fmt.Println("Endpoint Hit: update" + DATABASE_SNIPPET)
+    fmt.Println("Endpoint Hit: update " + DATABASE_SNIPPET)
   	b, err := ioutil.ReadAll(r.Body)
   	defer r.Body.Close()
 
@@ -98,7 +106,7 @@ func updateSnippet(w http.ResponseWriter, r *http.Request) {
   		return
   	}
 
-    db.Write(DATABASE_SNIPPET, item.Name, item)
+    db.Write(DATABASE_SNIPPET, item.Id, item)
   
   	output, err := json.Marshal(item)
   	if err != nil {
@@ -112,7 +120,7 @@ func updateSnippet(w http.ResponseWriter, r *http.Request) {
 
 
 func deleteSnippet(w http.ResponseWriter, r *http.Request) {
-    fmt.Println("Endpoint Hit: delete one" + DATABASE_SNIPPET)
+    fmt.Println("Endpoint Hit: delete one " + DATABASE_SNIPPET)
     vars := mux.Vars(r)
     id := vars["id"]
     fmt.Println("Removing: " + string(DATABASE_SNIPPET) + "/" + string(id))
@@ -211,10 +219,10 @@ func handleRequests() {
     // NOTE: Ordering is important here!
     
     SECTION_NAME:= "article"
-    router.HandleFunc(API_PREFIX + SECTION_NAME + "s"    , returnAllArticles)
-    router.HandleFunc(API_PREFIX + SECTION_NAME + "/"    , createNewArticle).Methods("POST")
-    router.HandleFunc(API_PREFIX + SECTION_NAME + "/{id}", deleteArticle).Methods("DELETE")
-    router.HandleFunc(API_PREFIX + SECTION_NAME + "/{id}", returnSingleArticle)
+    // router.HandleFunc(API_PREFIX + SECTION_NAME + "s"    , returnAllArticles)
+    // router.HandleFunc(API_PREFIX + SECTION_NAME + "/"    , createNewArticle).Methods("POST")
+    // router.HandleFunc(API_PREFIX + SECTION_NAME + "/{id}", deleteArticle).Methods("DELETE")
+    // router.HandleFunc(API_PREFIX + SECTION_NAME + "/{id}", returnSingleArticle)
 
     
     SECTION_NAME= "snippet"

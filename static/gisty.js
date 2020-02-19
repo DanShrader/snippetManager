@@ -70,8 +70,8 @@ var app = function () {
     // },
 
 	var model = Backbone.Model.extend({
+	  idAttribute: 'Id',
 		defaults: {
-			Id: null,
 			Name: "----",
 			Description: "",
 			Notes: "",
@@ -209,11 +209,7 @@ var app = function () {
 		template: '#details',
 
 		onBeforeRender: function () {
-			// console.log('------========------=====-----')
-			// console.log(settings.mode)
 			tmp = '#template-initial-load'
-			// 	tmp = _.template('Nothing to display.')
-			// 	console.log(this.template)
 			if (settings.mode === "edit" && typeof (settings.mode) !== "undefined") {
 				tmp = '#template-edit-details'
 			}
@@ -226,75 +222,32 @@ var app = function () {
 			if (settings.mode === "view" && typeof (settings.mode) !== "undefined") {
 				tmp = '#details'
 			}
-			// console.log(tmp)
 			this.template = tmp
 		},
 
 		editView: function () {
-			// 	this.template = '#template-edit-details';
 			settings.mode = "edit";
-
-		// 	orginalFiles = _.clone(this.model.get("files"));
-
 			this.render();
-			// 	this.status = "editMode"
-		// 	_.forEach(files.children._views, function (childView) {
-		// 		childView.change()
-		// 	});
 		},
-
-
 		newView: function () {
-			// 	this.template = '#template-edit-details';
 			settings.mode = "new";
 			this.render();
 			this.addGist();
 		},
-
 		deleteGists: function () {
-			// 	this.template = '#template-edit-details';
-			// console.warn('deleting the gist id: ',this.model.get('id'))
-
-		// 	var conf = confirm('About to delete. Proceed?')
-
-		// 	if (conf === true) {
-				// this.model.destroy();
-				
-				
-				this.model.set({"Id": this.model.get("Name")})
-
-        var options = {
-            success: function(model, response) {
-                console.log('remove success');
-                //debug.log(model);
-                console.log(response);
-                // this.unbind();
-                // this.remove();
-            },
-            error: function(model, response) {
-                console.log('remove error');
-                console.log(response);
-            }
-        };
-
-        this.model.destroy(options);
-				
-				
+        console.log(this.model)
+        console.log(this.model.attributes)
+        this.model.destroy();
 				this.$el.html('<h1>Deleted the gist</h1>');
 				gistList.$el.find('li').first().click();
-		// 	}
-
 		},
 
 		cancelView: function () {
-			// 	this.template = '#details';
 			settings.mode = "view";
 			gistList.$el.find('li').first().click();
 		},
 		readView: function () {
-			// 	this.template = '#details';
 			settings.mode = "view";
-			// fileView.template= '#file';
 			this.render();
 
 			$('pre code').each(function (i, block) {
@@ -304,17 +257,22 @@ var app = function () {
 		},
 
 		loadView: function () {
-			// 	this.template = '#details';
 			settings.mode = "loading";
-			// fileView.template= '#file';
 			this.render();
-			// 	this.status = "viewOnly"
 		},
 
 		saveView: function () {
 			console.log('save button');
+			console.log(this.model);
+			
 			console.log(this.ui.desc.val());
 			var desc = this.ui.desc.val();
+			
+			if(settings.mode == "new"){
+			  this.model = new model()
+			  gists.add(this.model)
+			}
+			
 			this.model.set({"Description": desc})
 			this.model.set({"Notes": desc})
 			this.model.save();
