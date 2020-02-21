@@ -47,7 +47,7 @@ var app = function () {
 		cache: false
 	});
 
-  url = "http://100.115.92.2:10000/api/v1/snippet"
+	url = "http://100.115.92.2:10000/api/v1/snippet"
 
 	var urlWithKey = function (url, key) {
 		return function () {
@@ -55,22 +55,8 @@ var app = function () {
 		};
 	};
 
-
-
-    // {
-    //     "Name": "new thing with a note",
-    //     "Description": "",
-    //     "Tags": "",
-    //     "Notes": "This is a new thing that has an awesome note",
-    //     "Reference": "",
-    //     "Related": "",
-    //     "Files": "",
-    //     "Language": "",
-    //     "Public": false
-    // },
-
 	var model = Backbone.Model.extend({
-	  idAttribute: 'Id',
+		idAttribute: 'Id',
 		defaults: {
 			Name: "----",
 			Description: "",
@@ -87,11 +73,9 @@ var app = function () {
 		url: url
 	});
 
-
 	var gists = new GistCollection();
 	gists.fetch()
 	window.gists = gists
-	
 
 	var ChildView = Marionette.View.extend({
 		template: '#item',
@@ -131,8 +115,6 @@ var app = function () {
 
 	var gistList = new CollectionView();
 	gistList.render();
-
-
 
 	var SearchView = Marionette.View.extend({
 		template: '#search-template',
@@ -181,8 +163,7 @@ var app = function () {
 	var searchView = new SearchView();
 	searchView.render();
 
-
-// window.tags = tags;
+	// window.tags = tags;
 
 	var detailView = Marionette.View.extend({
 		ui: {
@@ -235,11 +216,11 @@ var app = function () {
 			this.addGist();
 		},
 		deleteGists: function () {
-        console.log(this.model)
-        console.log(this.model.attributes)
-        this.model.destroy();
-				this.$el.html('<h1>Deleted the gist</h1>');
-				gistList.$el.find('li').first().click();
+			console.log(this.model)
+			console.log(this.model.attributes)
+			this.model.destroy();
+			this.$el.html('<h1>Deleted the gist</h1>');
+			gistList.$el.find('li').first().click();
 		},
 
 		cancelView: function () {
@@ -264,17 +245,21 @@ var app = function () {
 		saveView: function () {
 			console.log('save button');
 			console.log(this.model);
-			
+
 			console.log(this.ui.desc.val());
 			var desc = this.ui.desc.val();
-			
-			if(settings.mode == "new"){
-			  this.model = new model()
-			  gists.add(this.model)
+
+			if (settings.mode == "new") {
+				this.model = new model()
+				gists.add(this.model)
 			}
-			
-			this.model.set({"Description": desc})
-			this.model.set({"Notes": desc})
+
+			this.model.set({
+				"Description": desc
+			})
+			this.model.set({
+				"Notes": desc
+			})
 			this.model.save();
 			this.readView();
 		},
@@ -284,7 +269,7 @@ var app = function () {
 		},
 
 		onRender: function () {
-		// 	this.$el.find('.files').append(files.el);
+			// 	this.$el.find('.files').append(files.el);
 		}
 
 	});
@@ -296,60 +281,58 @@ var app = function () {
 	$("#content").html(gist.el);
 	$(".searchbox").html(searchView.el);
 
-// 	window.gist = gist;
-// 	window.gists = gists;
-// 	window.files = files;
-// 	window.gistList = gistList;
-// 	window.tagSummary = tagSummary;
-// 	window.tagViewSummary = tagViewSummary;
-// 	window.filtersAndTags = filtersAndTags;
+	// 	window.gist = gist;
+	// 	window.gists = gists;
+	// 	window.files = files;
+	// 	window.gistList = gistList;
+	// 	window.tagSummary = tagSummary;
+	// 	window.tagViewSummary = tagViewSummary;
+	// 	window.filtersAndTags = filtersAndTags;
 }
 
 var APIkey = localStorage.getItem("gistyAPIKey") || "";
 var themeColor = localStorage.getItem("gistyTheme") || "";
 
-
 // Thanks
 // https://stackoverflow.com/questions/7846980/how-do-i-switch-my-css-stylesheet-using-jquery
-var themeDark = function(){
-   console.warn('Dark')
-   $('link[href="/static/bootstrap.light.min.css"]').attr('href','bootstrap.dark.min.css');
-   $('link[href="/static/light.css"]').attr('href','dark.css');
-   $('link[href="/static/https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"]').attr('href','https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/railscasts.min.css');
-   localStorage.setItem("gistyTheme", "dark");
+var themeDark = function () {
+	console.warn('Dark')
+	$('link[href="static/bootstrap.light.min.css"]').attr('href', 'static/bootstrap.dark.min.css');
+	$('link[href="static/light.css"]').attr('href', 'static/dark.css');
+	$('link[href="static/https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css"]').attr('href', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/railscasts.min.css');
+	localStorage.setItem("gistyTheme", "dark");
 }
-var themeLight = function(){
-   console.warn('Light')
-   $('link[href="/static/bootstrap.dark.min.css"]').attr('href','bootstrap.light.min.css');
-   $('link[href="/static/dark.css"]').attr('href','light.css');
-   $('link[href="/static/https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/railscasts.min.css"]').attr('href','https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css');
-   localStorage.setItem("gistyTheme", "light");
-   
+var themeLight = function () {
+	console.warn('Light')
+	$('link[href="static/bootstrap.dark.min.css"]').attr('href', 'static/bootstrap.light.min.css');
+	$('link[href="static/dark.css"]').attr('href', 'static/light.css');
+	$('link[href="static/https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/railscasts.min.css"]').attr('href', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css');
+	localStorage.setItem("gistyTheme", "light");
+
 }
 
+$(document).ready(function () {
+	$('#dark').click(function () {
+		themeDark()
+	});
 
-$(document).ready(function() {
-  $('#dark').click(function (){
-    themeDark()
-  });
-  
-  $('#light').click(function (){
-    themeLight()
-  });
-  
-  if (1==2) {
-  	// Moved to below
-  	$('.sidebar-wrapper, .language-wrapper').hide()
-  	$("#page-content-wrapper").css('margin-left','50px');
-  } else {
-    if(themeColor === "light"){
-      themeLight()
-    } else {
-      localStorage.setItem("gistyTheme", "dark");
-    }
-    $('.sidebar-wrapper, .language-wrapper').show()
-    $("#page-content-wrapper").css('margin-left','550px');
-  	app();
-  }
-  
+	$('#light').click(function () {
+		themeLight()
+	});
+
+	if (1 == 2) {
+		// Moved to below
+		$('.sidebar-wrapper, .language-wrapper').hide()
+		$("#page-content-wrapper").css('margin-left', '50px');
+	} else {
+		if (themeColor === "light") {
+			themeLight()
+		} else {
+			localStorage.setItem("gistyTheme", "dark");
+		}
+		$('.sidebar-wrapper, .language-wrapper').show()
+		$("#page-content-wrapper").css('margin-left', '550px');
+		app();
+	}
+
 });

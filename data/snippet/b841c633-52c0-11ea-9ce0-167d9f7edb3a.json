@@ -1,9 +1,9 @@
 {
 	"Id": "b841c633-52c0-11ea-9ce0-167d9f7edb3a",
 	"Name": "----",
-	"Description": "NEw\nNew\nNew\nNEEEEEEEEEEWWWWWW",
+	"Description": "This is a multi-line\n\nRecord that is fun to test",
 	"Tags": " ",
-	"Notes": "NEw\nNew\nNew\nNEEEEEEEEEEWWWWWW",
+	"Notes": "This is a multi-line\n\nRecord that is fun to test",
 	"Reference": "",
 	"Related": "",
 	"Files": "",
