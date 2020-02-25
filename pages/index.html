@@ -104,7 +104,7 @@
   
   
   <script type="text/template" id='item'>
-    <p class='truncate'><%= Notes %></p>
+    <p class='truncate'><%= Description %></p>
     <%
       if (tags.length > 0) {
           _.each(tags.split(' '), function (tags) { %>
@@ -116,16 +116,8 @@
 
   <script type="text/template" id='details'>
     <div class="row">
-      <div class="col-3">
-      <% if(Public === false){  %>
-        Private gist <i class="fa fa-eye-slash" aria-hidden="true"></i>
-      <%   }else{  %>
-        Public gist <i class="fa fa-eye" aria-hidden="true"></i>
-      <%   } %>
-        
-      </div>
-      <div class="col-4">
-        Updated on:
+      <div class="col-7">
+        Updated on: <%= Updated_at %>
       </div>
       <div class="col-5">
         <div class="btn-group float-right" data-toggle="buttons">
@@ -154,7 +146,7 @@
     
     <hr>
     <div>
-      <p class='descriptionView'><%= Notes || "loading" %></p>
+      <p class='descriptionView'><%= Description || "loading" %></p>
     </div>
     <br>
     <br>
@@ -173,7 +165,7 @@
     </div>
     
     <div>
-      <textarea class="description"><%= Notes %></textarea>
+      <textarea class="description"><%= Description %></textarea>
     </div>
     <br>
     <br>

@@ -1,12 +1,8 @@
 {
 	"Id": "b841c633-52c0-11ea-9ce0-167d9f7edb3a",
-	"Name": "----",
 	"Description": "This is a multi-line\n\nRecord that is fun to test",
-	"Tags": " ",
-	"Notes": "This is a multi-line\n\nRecord that is fun to test",
-	"Reference": "",
-	"Related": "",
-	"Files": "",
+	"Updated_at": "2020-02-24",
 	"Language": "",
-	"Public": false
+	"Tags": " ",
+	"Reference": ""
 }

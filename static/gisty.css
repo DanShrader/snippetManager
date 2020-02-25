@@ -28,7 +28,7 @@ nav {
 
 .language-wrapper {
     position: fixed;
-    width: 200px;
+    width: 20px;
     font-size: 12px;
     overflow-y: scroll;
     top: 60px;
@@ -51,7 +51,7 @@ nav {
     width: 350px;
     font-size: 12px;
     overflow-y: scroll;
-    margin-left: 200px;
+    margin-left: 20px;
     top: 60px;
     bottom: 0;
 }

@@ -58,13 +58,11 @@ var app = function () {
 	var model = Backbone.Model.extend({
 		idAttribute: 'Id',
 		defaults: {
-			Name: "----",
 			Description: "",
-			Notes: "",
-			updated_at: 9999999999999999,
+			Updated_at: 9999999999999999,
 			Language: "",
-			Public: false,
-			Tags: " "
+			Tags: "",
+			Reference: ""
 		}
 	});
 
@@ -74,6 +72,38 @@ var app = function () {
 	});
 
 	var gists = new GistCollection();
+	
+	var modelTaggin = function (model) {
+		// _.forEach(model.get('files'), function (file) {
+		// 	var exist = model.get('language');
+		// 	model.set('language', " " + file.language + " " + exist);
+		// 	fileTypeCollection.add(file);
+		// });
+
+		// var des = model.get('description');
+		// var tagSplit = des.split("##");
+		// tagSplit.shift();
+		// var tagArray = [];
+		// tagSplit.forEach(function (str) {
+		// 	var part = str.split(" ");
+		// 	tagArray.push(part[0].toLowerCase());
+		// });
+		// model.set('tags', tagArray.join(" "));
+		console.info("Update the date")
+		model.set('Updated_at', (new Date().yyyymmdd()));
+		// model.set('intUpdateDate', (new Date(model.get('Updated_at')).toInt()));
+	};
+	
+	
+// 	gists.on("add", function (model) {
+// 		modelTaggin(model);
+// 	});
+	
+// 	gists.on("change", function (model) {
+// 		modelTaggin(model);
+// 	});
+	
+	
 	gists.fetch()
 	window.gists = gists
 
@@ -244,22 +274,21 @@ var app = function () {
 
 		saveView: function () {
 			console.log('save button');
-			console.log(this.model);
-
-			console.log(this.ui.desc.val());
-			var desc = this.ui.desc.val();
 
 			if (settings.mode == "new") {
 				this.model = new model()
 				gists.add(this.model)
 			}
 
+      modelTaggin(this.model);
+			console.log(this.ui.desc.val());
+			var desc = this.ui.desc.val();
 			this.model.set({
 				"Description": desc
 			})
-			this.model.set({
-				"Notes": desc
-			})
+			
+			console.log(this.model);
+						
 			this.model.save();
 			this.readView();
 		},
@@ -331,7 +360,7 @@ $(document).ready(function () {
 			localStorage.setItem("gistyTheme", "dark");
 		}
 		$('.sidebar-wrapper, .language-wrapper').show()
-		$("#page-content-wrapper").css('margin-left', '550px');
+		$("#page-content-wrapper").css('margin-left', '370px');
 		app();
 	}
 

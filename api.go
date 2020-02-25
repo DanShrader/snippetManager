@@ -17,15 +17,11 @@ import (
 // Data model
 type Snippet struct {
 	Id string
-	Name string
 	Description string
-	Tags string
-	Notes string
-	Reference string
-	Related string
-	Files string
+	Updated_at string
 	Language string
-	Public bool
+	Tags string
+	Reference string
 }
 
 func returnAllSnippets(w http.ResponseWriter, r * http.Request) {
